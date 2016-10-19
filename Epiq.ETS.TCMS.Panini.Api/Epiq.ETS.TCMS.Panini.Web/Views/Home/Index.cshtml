@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    
+}
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<br/>
+<button class="btn btn-default" id="scanButton">Scan</button>
+<button class="btn btn-primary" id="checkButton">Show Check</button>
+<button class="btn btn-warning" id="micrButton">Show MICR</button>
+<button class="btn btn-danger" id="barcodeButton">Show Barcode</button>
+<br />
+<br />
+<strong>CHECK:</strong>
+<br />
+<div id="paniniContainer" style="border:2px dotted black;background-color:#c3c3c3;width:1030px;height:355px;">
+    <img id="ItemPreview" src="" alt="check image" style="width:1024px;height:350px;" />
+</div>
+<br />
+<strong>MICR:</strong>
+<div id="micrContainer">
+
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        
+        var paniniUrl = "http://localhost:8585/api/panini";
+
+        $("#scanButton").on("click", function () {
+            console.log("scanning...")
+            $.ajax({
+                url: paniniUrl + "/Scan",
+                type: "POST",
+                ContentType: "application/json",
+                success: function (data) {
+                    alert("Scan Success");
+                }
+            });
+
+        });
+
+        $("#checkButton").on("click", function () {
+
+            $.ajax({
+                url: paniniUrl + "/ImageResult",
+                type: "GET",
+                success: function (data) {
+                    $("#ItemPreview").attr("src",  "data:image/png;base64," + data)
+                },
+                error: function (err) {
+                    console.log(err)
+                    alert("Error");
+                }
+            });
+
+        });
+
+        $("#micrButton").on("click", function () {
+
+            console.log("micr!!!")
+            $.ajax({
+                url: paniniUrl + "/MicrResult",
+                success: function (data) {
+                    console.log(data);
+                    var micr = data == "" ? "No result available" : data;
+                    $("#micrContainer").html(micr);
+                    
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
+
+        });
+
+        $("#barcodeButton").on("click", function () {
+
+            $.ajax({
+                url: paniniUrl + "/BarcodeResult",
+                success: function (data) {
+                    console.log(data)
+                },
+                error: function () {
+                    alert("No barcode Available");
+                }
+            });
+
+        });
+
+    })
+</script>

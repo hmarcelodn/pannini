@@ -10,10 +10,12 @@ using System.Net.Mime;
 using System.Threading.Tasks;
 using System.Web.Helpers;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Epiq.ETS.TCMS.Panini.Api.Controllers
 {
     [RoutePrefix("api/panini")]
+    [EnableCors(origins: "http://localhost:51261", headers: "*", methods: "*")]
     public class PaniniController : ApiController
     {
         private readonly string _connection;
@@ -35,11 +37,10 @@ namespace Epiq.ETS.TCMS.Panini.Api.Controllers
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = 0;
 
-           
             var response = (HttpWebResponse)request.GetResponse();
 
 
-            return Ok();
+            return Ok(response.StatusCode);
         }
 
         [HttpGet]
@@ -49,14 +50,15 @@ namespace Epiq.ETS.TCMS.Panini.Api.Controllers
 
             byte[] byteResponse = new WebClient().DownloadData(_connection + "/results/micr");
 
+            string micrText = string.Empty;
+
             using(var stream = new StreamReader(new MemoryStream(byteResponse)))
             {
-                var line = stream.ReadToEnd();
-                // -> save the file into an object
+                micrText = stream.ReadToEnd();
             }
             
 
-            return Ok(byteResponse);
+            return Ok(micrText);
         }
 
         [HttpGet]
@@ -64,8 +66,6 @@ namespace Epiq.ETS.TCMS.Panini.Api.Controllers
         public IHttpActionResult GetImageResult()
         {
             byte[] byteResponse = new WebClient().DownloadData(_connection + "/results/front_image");
-
-            //store image as bytes/bloop
 
             return Ok(byteResponse);
         }
