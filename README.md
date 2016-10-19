@@ -75,4 +75,4 @@ Panini m:IDeal device is configured under *Infrastructure Topology (Wi-Fi-Ethern
 
 ## Screen Cast Available ##
 
-[http://www.google.com](http://www.google.com "Panini Demo")
+[http://screencast.com/t/NcqMgFU4vM](http://screencast.com/t/NcqMgFU4vM "ScreenCast")
