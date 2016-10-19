@@ -74,9 +74,16 @@ namespace Epiq.ETS.TCMS.Panini.Api.Controllers
         [Route("BarcodeResult")]
         public IHttpActionResult GetBarcodeResult()
         {
-            byte[] byteResponse = new WebClient().DownloadData(_connection + "/results/barcode_front");
+            try
+            {
+                byte[] byteResponse = new WebClient().DownloadData(_connection + "/results/barcode_front");
+                return Ok(byteResponse);
+            }
+            catch (Exception)
+            {
 
-            return Ok(byteResponse);
+                return BadRequest();
+            }
 
         }
     }
